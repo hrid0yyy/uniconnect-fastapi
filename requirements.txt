@@ -1,0 +1,10 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+langchain==0.1.0
+langchain-groq==0.0.1
+langchain_google_genai==0.0.1
+python-dotenv==1.0.0
+python-jose[cryptography]==3.3.0  # For JWT handling
+passlib[bcrypt]==1.7.4           # For password hashing
+python-multipart==0.0.6          # For form data parsing
+pydantic==2.5.2                  # For data validation
