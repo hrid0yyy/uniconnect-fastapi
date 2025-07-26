@@ -12,7 +12,3 @@ def generate_test_token():
     token = jwt.encode(payload, secret_key, algorithm="HS256")
     print("Test Token:", token)
 
-if __name__ == "__main__":
-    # To run this script directly, use:
-    # python -m src.utils.generate_test_token 
-    generate_test_token()

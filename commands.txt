@@ -2,6 +2,7 @@
 .venv/Scripts/Activate
 pip install -r requirements.txt
 uvicorn src.main:app --reload --port 8000
+python -m src.utils.generate_test_token  # Genarate JWT auth token
 
 #test component
 python -m src.model.sentiment     # sample command to test sentiment
