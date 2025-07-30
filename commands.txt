@@ -1,7 +1,7 @@
 #environment setup
-.venv/Scripts/Activate
+venv/Scripts/Activate
 pip install -r requirements.txt
-uvicorn src.main:app --reload --port 8000
+uvicorn main:app --reload --port 8001
 python -m src.utils.generate_test_token  # Genarate JWT auth token
 
 #test component

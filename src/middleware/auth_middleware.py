@@ -1,6 +1,9 @@
 from fastapi import Request, HTTPException
 from ..utils.auth import APIKeyAuth
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 auth_handler = APIKeyAuth(os.getenv("SERVER_SECRET_KEY"))
 
