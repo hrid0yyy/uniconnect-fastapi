@@ -6,13 +6,15 @@ from src.config import cloudinary_config
 
 app = FastAPI()
 
-app.middleware("http")(verify_server_token)
+# Disable auth middleware for development purposes
+#app.middleware("http")(verify_server_token)
+#generate_test_token()
+
 app.include_router(inference.router)
 app.include_router(notes.router)
 app.include_router(agent.router)
   
-  
-generate_test_token()
+
 @app.get("/")
 def read_root():
     return {"message": "Therap BD - FastAPI"}

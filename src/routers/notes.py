@@ -17,6 +17,9 @@ milvus_notes = milvus_get_collection("notes")
 async def upload_note(files: List[UploadFile] = File(...),
                       email: str = Form(...),
                       title: str = Form(...),
+                      subject: str = Form(...),
+                      course_code: str = Form(...),
+                      tags: List[str] = Form(...),
                       description: str = Form(...)):
     try:
    
@@ -53,6 +56,9 @@ async def upload_note(files: List[UploadFile] = File(...),
                 "folder_id": folder_id,
                 "email": email,
                 "title": title,
+                "subject": subject,
+                "course_code": course_code,
+                "tags": tags,
                 "text": response.get("text")
             }
             milvus_notes.insert([vector_metadata])
@@ -61,6 +67,9 @@ async def upload_note(files: List[UploadFile] = File(...),
         file_metadata = {
             "email": email,
             "title": title,
+            "subject": subject,
+            "course_code": course_code,
+            "tags": tags,
             "description": description,
             "folder_id": folder_id,
             "public_ids": public_ids,
@@ -86,7 +95,6 @@ async def delete_notes(request: DeleteNotesRequest):
     
     try:
         public_ids = mongo_notes.find_one({"folder_id": folder_id})["public_ids"]
-        print(public_ids)
         for public_id in public_ids:
             cloudinary.uploader.destroy(public_id)
         # Delete the folder
