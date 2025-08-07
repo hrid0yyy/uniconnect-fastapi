@@ -7,6 +7,8 @@ from pydantic import BaseModel
 from ..config.mongodb_config import get_collection as mongo_get_collection
 from ..utils.process import process_files
 from ..config.milvus_config import get_collection as milvus_get_collection
+from datetime import datetime
+from ..handler.Evaluation import evaluate_notes
 
 router = APIRouter()
 
@@ -41,6 +43,7 @@ async def upload_note(files: List[UploadFile] = File(...),
         folder_id = f'notes/{email}/{uuid.uuid4()}'  
         files_url = []
         public_ids = []
+        texts = []
         for file in files:
             # Upload each file to Cloudinary
             response = cloudinary.uploader.upload(
@@ -61,9 +64,16 @@ async def upload_note(files: List[UploadFile] = File(...),
                 "tags": tags,
                 "text": response.get("text")
             }
+            texts.append(response.get("text"))
             milvus_notes.insert([vector_metadata])
-
-
+        
+        ai_evaluation_metadata = {
+            "title": title,
+            "subject": subject,
+            "tags" : tags,
+            "content": texts,
+        }
+        ai_evaluation = evaluate_notes(ai_evaluation_metadata)
         file_metadata = {
             "email": email,
             "title": title,
@@ -74,10 +84,13 @@ async def upload_note(files: List[UploadFile] = File(...),
             "folder_id": folder_id,
             "public_ids": public_ids,
             "urls": files_url,
+            "score" : ai_evaluation.get("score"),
+            "feedback" : ai_evaluation.get("feedback"),
+            "createdAt": datetime.now().isoformat(),
         }
 
         # Save metadata to MongoDB
-        mongo_notes.insert_one(file_metadata)
+        response = mongo_notes.insert_one(file_metadata)
         return {"success": True, "folder_id": folder_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

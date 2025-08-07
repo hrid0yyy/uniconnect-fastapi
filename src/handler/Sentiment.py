@@ -17,10 +17,7 @@ Return exactly one number based on these rules:
 
 Return only the number (-1, 0, or 1) with no other text."""
 
-sentiment_prompt = PromptTemplate(
-    input_variables=["text"],
-    template=sentiment_template
-)
+
 
 def parse_sentiment_response(response: str) -> SentimentResponse:
     try:
